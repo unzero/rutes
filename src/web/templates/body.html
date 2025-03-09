@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block body %}
+<body>
+    <main>
+        <div class="row">
+            <div class="col">
+                <div class="list-group">
+                    {% block actions %}{% endblock actions %}
+                </div>
+            </div>
+            <div class="col-10">
+                {% block content %}{% endblock content %}
+            </div>
+        </div>
+    </main>
+</body>
+{% endblock body %}

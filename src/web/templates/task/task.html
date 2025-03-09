@@ -1,0 +1,41 @@
+{% extends "body.html" %}
+
+<a href="/task/scheduler" class="list-group-item list-group-item-action">Schedule a new task</a>
+
+{% block content %}
+<div class="container">
+    <h3 class="h3 mb-3">These are the running tasks.</h3>
+</div>
+
+<div class="container">
+    <table class="table table-striped">
+        <thead>
+            <tr class="table-info">
+                {% for column in metainformation %}
+                <th scope="col">{{column}}</th>
+                {% endfor %}
+                <th scope="col">Logs</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in running_tasks %}
+            <tr>
+                <td>{{task.uuid}}</td>
+                <td>{{task.log_filepath}}</td>
+                <td>{{task.command}}</td>
+                <td>{{task.status}}</td>
+                <td>
+                    <a class="icon-link icon-link-hover" style="--bs-icon-link-transform: translate3d(0, -.125rem, 0);"
+                        href="/task/logs/{{loop.index - 1}}">
+                        <svg class="bi" aria-hidden="true">
+                            <use xlink:href="#clipboard"></use>
+                        </svg>
+                        View logs
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}

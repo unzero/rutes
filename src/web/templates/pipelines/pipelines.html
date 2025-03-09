@@ -1,0 +1,17 @@
+{% extends "body.html" %}
+
+{% block actions %}
+<a href="/pipeline/new" class="list-group-item list-group-item-action">Create pipeline</a>
+{% endblock actions %}
+
+{% block content %}
+<div class="container">
+    <h3 class="h3 mb-3">Here are your pipelines.</h3>
+    <div class="list-group">
+        {% for pipe in pipelines %}
+        <a href="/pipeline/{{pipe.uuid}}" class="list-group-item list-group-item-action">{{pipe.name}}</a>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock content %}

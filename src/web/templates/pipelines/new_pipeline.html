@@ -1,0 +1,21 @@
+{% extends "body.html" %}
+
+{% block actions %}
+<a href="/" class="list-group-item list-group-item-action">Go back</a>
+{% endblock actions %}
+
+{% block content %}
+<div class="container">
+    <h3 class="h3 mb-3">Hello! Enter the new pipeline data here.</h3>
+    <form action="/pipeline/new" method="post">
+        <div class="mb-3">
+            <label for="id-name" class="form-label">Pipeline name</label>
+            <input type="text" class="form-control" id="id-name" aria-describedby="name" name="name">
+        </div>
+
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary mb-3">Create pipeline</button>
+        </div>
+    </form>
+</div>
+{% endblock content %}

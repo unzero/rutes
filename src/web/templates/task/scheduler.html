@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+    <h3 class="h3 mb-3">Hello! Schedule a new task.</h3>
+
+    <form action="/task/scheduler" method="post">
+        <div class="mb-3">
+            <label for="id-command" class="form-label">Command</label>
+            <input type="text" class="form-control" id="id-command" aria-describedby="command" name="command">
+        </div>
+
+        <div class="mb-3">
+            <label for="id-arguments" class="form-label">Arguments</label>
+            <input type="text" class="form-control" id="id-arguments" aria-describedby="arguments" name="arguments">
+        </div>
+
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary mb-3">Schedule Task</button>
+        </div>
+    </form>
+</div>
+{% endblock content %}

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+<body class="d-flex align-items-center py-4 bg-body-tertiary"> 
+
+    <main class="form-signin w-100 m-auto">
+        <button onclick="connect()">connect</button>
+        <button onclick="send()">send</button>
+        <div class="container" id="logs"></div>
+    </main>
+</body>
+{% endblock content %}
+
+{% block scripts %}
+
+<script>
+    /** @type {WebSocket | null} */
+    var socket = null
+
+    function log(msg) {
+        console.log(msg);
+    }
+
+    function disconnect() {
+      if (socket) {
+          log('Disconnecting...');
+          socket.close();
+          socket = null;
+      }
+    }
+
+    function connect() {
+      disconnect()
+      const wsUri = `ws://${location.host}/task/ws`
+
+      log('Connecting...')
+      socket = new WebSocket(wsUri)
+
+      socket.onopen = () => {
+        log('Connected')
+      }
+
+      socket.onmessage = ev => {
+        log('Received: ' + ev.data)
+      }
+
+      socket.onclose = () => {
+        log('Disconnected')
+        socket = null
+      }
+    }
+
+    function send() {
+      if (socket){
+        socket.send("hello");
+      }
+    }
+</script>
+
+{% endblock scripts %}
