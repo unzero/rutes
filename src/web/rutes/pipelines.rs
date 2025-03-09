@@ -49,7 +49,7 @@ pub async fn pipeline_front(
         .map_err(|_e| RutesHttpError::Default)?;
     Ok(common::render_template(
         "pipelines/pipeline.html",
-        crate::context!({"uuid": pipe.uuid, "name": pipe.name}),
+        crate::context!({"uuid": pipe.uuid, "name": pipe.name, "description": pipe.description}),
         templates,
     ))
 }
@@ -74,7 +74,7 @@ pub async fn configure_pipeline(
         .map_err(|_e| RutesHttpError::Default)?;
     Ok(common::render_template(
         "pipelines/configure.html",
-        crate::context!({"uuid": uuid, "name": pipe.name, "description": pipe.description, "script": pipe.script}),
+        crate::context!({"pipeline": pipe}),
         templates,
     ))
 }

@@ -1,7 +1,7 @@
 {% extends "body.html" %}
 
 {% block actions %}
-<a href="/" class="list-group-item list-group-item-action">Go back</a>
+<a href="/pipeline/{{pipeline.uuid}}" class="list-group-item list-group-item-action">Go back</a>
 {% endblock actions %}
 
 {% block content %}
@@ -10,12 +10,17 @@
     <form action="/pipeline/update" method="post">
         <div class="mb-3">
             <label for="id-name" class="form-label">Pipeline name</label>
-            <input type="text" class="form-control" id="id-name" aria-describedby="name" name="name" value="{{name}}">
+            <input type="text" class="form-control" id="id-name" aria-describedby="name" name="name" value="{{pipeline.name}}">
+        </div>
+
+        <div class="mb-3">
+            <label for="id-description" class="form-label">Pipeline description</label>
+            <input type="text" class="form-control" id="id-description" aria-describedby="description" name="description" value="{{pipeline.description}}">
         </div>
 
         <div class="mb-3">
             <label for="id-pipeline-script" class="form-label">Pipeline Script</label>
-            <textarea class="form-control" id="id-pipeline-script" rows="4"></textarea>
+            <textarea class="form-control" id="id-pipeline-script" rows="4">{{pipeline.script}}</textarea>
           </div>
 
         <div class="mb-3">
