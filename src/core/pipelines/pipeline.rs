@@ -1,4 +1,4 @@
-use std::convert::From;
+use std::convert::TryFrom;
 use std::fs;
 use std::path::Path;
 
@@ -15,10 +15,11 @@ pub struct Pipeline {
     pub script: String,
 }
 
-impl From<&Path> for Pipeline {
-    fn from(file: &Path) -> Self {
-        let serialized = fs::read_to_string(file).unwrap();
-        serde_json::from_str(&serialized).unwrap()
+impl TryFrom<&Path> for Pipeline {
+    type Error = RutesError;
+    fn try_from(file: &Path) -> Result<Self, RutesError> {
+        let serialized = fs::read_to_string(file).map_err(|_e| RutesError::IOError)?;
+        Ok(serde_json::from_str(&serialized).map_err(|_e| RutesError::SerializationError)?)
     }
 }
 
@@ -34,8 +35,8 @@ impl Pipeline {
 
     pub fn store(&self, userpath: String) -> Result<(), RutesError> {
         let path = format!("{}/{}.json", userpath, self.uuid);
-        let contents = serde_json::to_string(&self).map_err(|_e| RutesError::PipelineError)?;
-        fs::write(path, contents).map_err(|_e| RutesError::PipelineError)?;
+        let contents = serde_json::to_string(&self).map_err(|_e| RutesError::SerializationError)?;
+        fs::write(path, contents).map_err(|_e| RutesError::IOError)?;
         Ok(())
     }
 

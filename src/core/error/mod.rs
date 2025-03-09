@@ -1,7 +1,9 @@
 #[derive(Debug)]
 pub enum RutesError {
     ExecutorError,
-    UserInitializationError,
+    IOError,
+    SerializationError,
+    UserCreationError,
     TaskError,
     ConfigurationError,
     PipelineError,

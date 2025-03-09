@@ -16,7 +16,7 @@ impl User {
             format!("{}/{}/pipelines", RUTES_HOME, username),
         ];
         for path in userpaths{
-            fs::create_dir_all(path).map_err(|_e| RutesError::UserInitializationError)?;
+            fs::create_dir_all(path).map_err(|_e| RutesError::UserCreationError)?;
         }
         Ok(Self { username })
     }
