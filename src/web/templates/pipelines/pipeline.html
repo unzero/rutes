@@ -1,9 +1,12 @@
 {% extends "body.html" %}
 
 {% block actions %}
-<a href="/" class="list-group-item list-group-item-action">Go back</a>
+<a href="/pipeline/execute/{{uuid}}" class="list-group-item list-group-item-action">Execute</a>
+<a href="/pipeline/configure/{{uuid}}" class="list-group-item list-group-item-action">Configure</a>
+
 <a href="" class="list-group-item list-group-item-action list-group-item-danger" data-bs-toggle="modal"
-    data-bs-target="#exampleModal">Delete pipeline</a>
+    data-bs-target="#exampleModal">Drop pipeline</a>
+<a href="/" class="list-group-item list-group-item-action">Go back</a>
 {% endblock actions %}
 
 {% block content %}
@@ -20,7 +23,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Are you sure you want to delete the pipeline "{{name}}"? This change cannot be done.
+                Are you sure you want to drop the pipeline "{{name}}"? This change cannot be done.
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

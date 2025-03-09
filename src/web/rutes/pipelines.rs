@@ -62,3 +62,17 @@ pub async fn drop_pipeline(
     core::pipelines::drop_pipeline(user, uuid).map_err(|_e| RutesHttpError::Default)?;
     get_pipelines(templates).await
 }
+
+pub async fn configure_pipeline(
+    path: web::Path<String>,
+    templates: actix_web::web::Data<tera::Tera>,
+) -> Result<HttpResponse, RutesHttpError> {
+    let uuid = path.into_inner();
+    let user = User::new(String::from("tsukiko")).map_err(|_e| RutesHttpError::Default)?;
+    let pipe = core::pipelines::query_pipeline(user, uuid.clone()).map_err(|_e| RutesHttpError::Default)?;
+    Ok(common::render_template(
+        "pipelines/configure.html",
+        crate::context!({"uuid": uuid, "name": pipe.name}),
+        templates,
+    ))
+}

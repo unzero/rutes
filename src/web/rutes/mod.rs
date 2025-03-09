@@ -29,6 +29,11 @@ pub fn get_configuration(cfg: &mut web::ServiceConfig) {
             .route(web::post().to(pipelines::drop_pipeline))
             .default_service(actix_web::web::route().to(errors::not_found)),
     );
+    cfg.service(
+        web::resource("pipeline/configure/{uuid}")
+            .route(web::get().to(pipelines::configure_pipeline))
+            .default_service(actix_web::web::route().to(errors::not_found)),
+    );
 
     /* task configuration */
     cfg.service(
