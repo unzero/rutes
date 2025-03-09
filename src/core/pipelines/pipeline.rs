@@ -32,7 +32,7 @@ impl Pipeline {
         }
     }
 
-    pub fn store(self, userpath: String) -> Result<(), RutesError> {
+    pub fn store(&self, userpath: String) -> Result<(), RutesError> {
         let path = format!("{}/{}.json", userpath, self.uuid);
         let contents = serde_json::to_string(&self).map_err(|_e| RutesError::PipelineError)?;
         fs::write(path, contents).map_err(|_e| RutesError::PipelineError)?;
@@ -41,5 +41,19 @@ impl Pipeline {
 
     pub fn drop(self) -> Result<(), RutesError> {
         Ok(())
+    }
+
+    pub fn update(
+        mut self,
+        userpath: String,
+        name: &str,
+        description: &str,
+        script: &str,
+    ) -> Result<Pipeline, RutesError> {
+        self.name = String::from(name);
+        self.description = String::from(description);
+        self.script = String::from(script);
+        self.store(userpath).map_err(|e| e)?;
+        Ok(self)
     }
 }
