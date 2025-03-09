@@ -20,9 +20,14 @@ pub fn get_configuration(cfg: &mut web::ServiceConfig) {
             .default_service(actix_web::web::route().to(errors::not_found)),
     );
     cfg.service(
-        web::resource("pipeline/{uuid}")
+        web::resource("pipeline/view/{uuid}")
             .route(web::get().to(pipelines::pipeline_front))
             .default_service(actix_web::web::route().to(errors::not_found)),
+    );
+    cfg.service(
+        web::resource("pipeline/update")
+            .route(web::post().to(pipelines::update_pipeline))
+            //.default_service(actix_web::web::route().to(errors::not_found)),
     );
     cfg.service(
         web::resource("pipeline/drop/{uuid}")
@@ -30,10 +35,13 @@ pub fn get_configuration(cfg: &mut web::ServiceConfig) {
             .default_service(actix_web::web::route().to(errors::not_found)),
     );
     cfg.service(
-        web::resource("pipeline/configure/{uuid}")
+        web::resource("pipeline/update/{uuid}")
             .route(web::get().to(pipelines::configure_pipeline))
             .default_service(actix_web::web::route().to(errors::not_found)),
     );
+
+
+
 
     /* task configuration */
     cfg.service(

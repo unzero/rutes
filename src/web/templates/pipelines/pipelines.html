@@ -9,7 +9,7 @@
     <h3 class="h3 mb-3">Here are your pipelines.</h3>
     <div class="list-group">
         {% for pipe in pipelines %}
-        <a href="/pipeline/{{pipe.uuid}}" class="list-group-item list-group-item-action">{{pipe.name}}</a>
+        <a href="/pipeline/view/{{pipe.uuid}}" class="list-group-item list-group-item-action">{{pipe.name}}</a>
         {% endfor %}
     </div>
 

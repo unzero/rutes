@@ -22,11 +22,10 @@ pub async fn get_pipelines(
 
 pub async fn create_pipeline(
     form: actix_web::web::Form<PipelineForm>,
-    templates: actix_web::web::Data<tera::Tera>,
 ) -> Result<HttpResponse, RutesHttpError> {
     let user = User::new(String::from("tsukiko")).map_err(|_e| RutesHttpError::Default)?;
     let _ = core::pipelines::create_pipeline(&user, form.name.as_str(), form.description.as_str());
-    get_pipelines(templates).await
+    Ok(common::redirect("/"))
 }
 
 pub async fn new_pipeline(
@@ -70,11 +69,25 @@ pub async fn configure_pipeline(
 ) -> Result<HttpResponse, RutesHttpError> {
     let uuid = path.into_inner();
     let user = User::new(String::from("tsukiko")).map_err(|_e| RutesHttpError::Default)?;
-    let pipe = core::pipelines::query_pipeline(user, uuid.clone())
+    let pipeline = core::pipelines::query_pipeline(user, uuid.clone())
         .map_err(|_e| RutesHttpError::Default)?;
     Ok(common::render_template(
-        "pipelines/configure.html",
-        crate::context!({"pipeline": pipe}),
+        "pipelines/update.html",
+        crate::context!({"pipeline": pipeline}),
         templates,
     ))
+}
+
+pub async fn update_pipeline(
+    form: actix_web::web::Form<PipelineForm>,
+) -> Result<HttpResponse, RutesHttpError> {
+    let user = User::new(String::from("tsukiko")).unwrap();
+    let uuid = core::pipelines::update_pipeline(
+        user,
+        form.get_uuid()?.as_str(),
+        form.name.as_str(),
+        form.description.as_str(),
+        form.get_script()?.as_str(),
+    ).unwrap();
+    Ok(common::redirect(format!("/pipeline/view/{}", uuid).as_str()))
 }
