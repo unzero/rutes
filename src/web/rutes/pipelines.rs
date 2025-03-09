@@ -2,7 +2,7 @@ use actix_web::{HttpResponse, Result};
 use actix_web::web;
 
 use super::errors::RutesHttpError;
-use super::forms::NewPipeline;
+use super::forms::PipelineForm;
 use crate::core;
 use crate::core::user::User;
 use crate::web::rutes::common;
@@ -21,7 +21,7 @@ pub async fn get_pipelines(
 }
 
 pub async fn create_pipeline(
-    form: actix_web::web::Form<NewPipeline>,
+    form: actix_web::web::Form<PipelineForm>,
     templates: actix_web::web::Data<tera::Tera>,
 ) -> Result<HttpResponse, RutesHttpError> {
     let user = User::new(String::from("tsukiko")).map_err(|_e| RutesHttpError::Default)?;
