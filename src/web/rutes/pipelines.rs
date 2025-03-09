@@ -1,5 +1,5 @@
-use actix_web::{HttpResponse, Result};
 use actix_web::web;
+use actix_web::{HttpResponse, Result};
 
 use super::errors::RutesHttpError;
 use super::forms::PipelineForm;
@@ -25,7 +25,7 @@ pub async fn create_pipeline(
     templates: actix_web::web::Data<tera::Tera>,
 ) -> Result<HttpResponse, RutesHttpError> {
     let user = User::new(String::from("tsukiko")).map_err(|_e| RutesHttpError::Default)?;
-    let _ = core::pipelines::create_pipeline(&user, form.name.clone());
+    let _ = core::pipelines::create_pipeline(&user, form.name.as_str(), form.description.as_str());
     get_pipelines(templates).await
 }
 
@@ -45,10 +45,11 @@ pub async fn pipeline_front(
 ) -> Result<HttpResponse, RutesHttpError> {
     let uuid = path.into_inner();
     let user = User::new(String::from("tsukiko")).map_err(|_e| RutesHttpError::Default)?;
-    let pipe = core::pipelines::query_pipeline(user, uuid.clone()).map_err(|_e| RutesHttpError::Default)?;
+    let pipe = core::pipelines::query_pipeline(user, uuid.clone())
+        .map_err(|_e| RutesHttpError::Default)?;
     Ok(common::render_template(
         "pipelines/pipeline.html",
-        crate::context!({"uuid": uuid, "name": pipe.name}),
+        crate::context!({"uuid": pipe.uuid, "name": pipe.name}),
         templates,
     ))
 }
@@ -69,10 +70,11 @@ pub async fn configure_pipeline(
 ) -> Result<HttpResponse, RutesHttpError> {
     let uuid = path.into_inner();
     let user = User::new(String::from("tsukiko")).map_err(|_e| RutesHttpError::Default)?;
-    let pipe = core::pipelines::query_pipeline(user, uuid.clone()).map_err(|_e| RutesHttpError::Default)?;
+    let pipe = core::pipelines::query_pipeline(user, uuid.clone())
+        .map_err(|_e| RutesHttpError::Default)?;
     Ok(common::render_template(
         "pipelines/configure.html",
-        crate::context!({"uuid": uuid, "name": pipe.name}),
+        crate::context!({"uuid": uuid, "name": pipe.name, "description": pipe.description, "script": pipe.script}),
         templates,
     ))
 }
