@@ -9,23 +9,10 @@ use crate::core::error::RutesError;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Pipeline {
-    uuid: Uuid,
-    name: String,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct PipelineMetadata {
     pub uuid: Uuid,
     pub name: String,
-}
-
-impl From<&Pipeline> for PipelineMetadata {
-    fn from(pipeline: &Pipeline) -> Self {
-        PipelineMetadata {
-            uuid: pipeline.uuid,
-            name: pipeline.name.clone(),
-        }
-    }
+    pub description: String,
+    pub script: String,
 }
 
 impl From<&Path> for Pipeline {
@@ -36,10 +23,12 @@ impl From<&Path> for Pipeline {
 }
 
 impl Pipeline {
-    pub fn new(name: String) -> Self {
+    pub fn new(name: &str, description: &str) -> Self {
         Pipeline {
             uuid: Uuid::new_v4(),
-            name: name,
+            name: String::from(name),
+            description: String::from(description),
+            script: String::from(""),
         }
     }
 
