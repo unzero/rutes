@@ -45,7 +45,7 @@ pub async fn main() -> std::io::Result<()> {
             //.service(actix_files::Files::new("/static", "./static/").show_files_listing())
             .default_service( actix_web::web::route().to( not_found ) )
     })
-    .bind(("192.168.230.130", 8080))?
+    .bind(("192.168.174.128", 8080))?
     .run()
     .await
 }

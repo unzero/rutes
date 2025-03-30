@@ -27,7 +27,7 @@ pub fn get_configuration(cfg: &mut web::ServiceConfig) {
     cfg.service(
         web::resource("pipeline/update")
             .route(web::post().to(pipelines::update_pipeline))
-            //.default_service(actix_web::web::route().to(errors::not_found)),
+            .default_service(actix_web::web::route().to(errors::not_found)),
     );
     cfg.service(
         web::resource("pipeline/drop/{uuid}")
@@ -37,6 +37,16 @@ pub fn get_configuration(cfg: &mut web::ServiceConfig) {
     cfg.service(
         web::resource("pipeline/update/{uuid}")
             .route(web::get().to(pipelines::configure_pipeline))
+            .default_service(actix_web::web::route().to(errors::not_found)),
+    );
+    cfg.service(
+        web::resource("pipeline/check_syntax")
+            .route(web::post().to(pipelines::check_pipeline_code))
+            .default_service(actix_web::web::route().to(errors::not_found)),
+    );
+    cfg.service(
+        web::resource("pipeline/execute/{uuid}")
+            .route(web::get().to(pipelines::execute))
             .default_service(actix_web::web::route().to(errors::not_found)),
     );
 

@@ -1,0 +1,27 @@
+{% extends "body.html" %}
+
+{% block actions %}
+<a href="/pipeline/view/{{uuid}}" class="list-group-item list-group-item-action">Go back</a>
+{% endblock actions %}
+
+{% block content %}
+<div class="container">
+    <h3>Schedule {{name}} pipeline run.</h3>
+    <h5>{{description}}.</h5>
+    <form action="/pipeline/schedule" method="post">
+        {% for parameter in parameters %}
+        <div class="mb-3">
+            <label for="id-{{parameter.name}}" class="form-label">{{parameter.label}}</label>
+            <input type="{{parameter.type}}" class="form-control" id="id-{{parameter.name}}"
+                aria-describedby="{{parameter.name}}">
+        </div>
+        {% endfor %}
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary mb-3">Schedule run</button>
+        </div>
+    </form>
+</div>
+
+
+
+{% endblock content %}

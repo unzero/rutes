@@ -33,8 +33,49 @@
         </div>
 
         <div class="mb-3">
+            <button type="button" class="btn btn-secondary mb-3" onclick="javascript:check_syntax()">Check Pipeline
+                Syntax</button>
             <button type="submit" class="btn btn-primary mb-3">Update pipeline</button>
         </div>
     </form>
+
 </div>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true"
+        id="liveToast">
+        <div class="d-flex">
+            <div class="toast-body">
+                Script is ok.
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+
 {% endblock content %}
+
+{% block scripts %}
+<script>
+    function check_syntax() {
+        $.ajax({
+            method: "POST",
+            url: "/pipeline/check_syntax",
+            contentType: 'application/json',
+            data: JSON.stringify({
+                'script': $("#id-pipeline-script").val(),
+            }),
+            success: function (result) {
+                const toastLiveExample = document.getElementById('liveToast');
+                const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+                toastBootstrap.show();
+            },
+            error: function (result) {
+                alert("not good");
+            }
+        });
+    }
+
+</script>
+{% endblock %}

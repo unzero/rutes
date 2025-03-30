@@ -17,17 +17,22 @@ pub struct NewTask {
     pub arguments: String,
 }
 
+#[derive(Debug, Deserialize, Serialize)]
+pub struct PipelineCode {
+    pub script: String,
+}
+
 impl PipelineForm {
     pub fn get_uuid(&self) -> Result<String, RutesHttpError> {
         match &self.uuid {
-            Some(s) => Ok(s.to_string()), 
+            Some(s) => Ok(s.to_string()),
             _ => Err(RutesHttpError::Default),
         }
     }
 
     pub fn get_script(&self) -> Result<String, RutesHttpError> {
         match &self.script {
-            Some(s) => Ok(s.to_string()), 
+            Some(s) => Ok(s.to_string()),
             _ => Err(RutesHttpError::Default),
         }
     }

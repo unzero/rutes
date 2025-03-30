@@ -2,6 +2,7 @@ use actix_web::web;
 use actix_web::{HttpResponse, Result};
 
 use super::errors::RutesHttpError;
+use super::forms::PipelineCode;
 use super::forms::PipelineForm;
 use crate::core;
 use crate::core::user::User;
@@ -44,11 +45,11 @@ pub async fn pipeline_front(
 ) -> Result<HttpResponse, RutesHttpError> {
     let uuid = path.into_inner();
     let user = User::new(String::from("tsukiko")).map_err(|_e| RutesHttpError::Default)?;
-    let pipe = core::pipelines::query_pipeline(user, uuid.clone())
+    let pipeline = core::pipelines::query_pipeline(user, uuid.clone())
         .map_err(|_e| RutesHttpError::Default)?;
     Ok(common::render_template(
         "pipelines/pipeline.html",
-        crate::context!({"uuid": pipe.uuid, "name": pipe.name, "description": pipe.description}),
+        crate::context!({"uuid": pipeline.uuid, "name": pipeline.name, "description": pipeline.description}),
         templates,
     ))
 }
@@ -88,6 +89,36 @@ pub async fn update_pipeline(
         form.name.as_str(),
         form.description.as_str(),
         form.get_script()?.as_str(),
-    ).unwrap();
-    Ok(common::redirect(format!("/pipeline/view/{}", uuid).as_str()))
+    )
+    .unwrap();
+    Ok(common::redirect(
+        format!("/pipeline/view/{}", uuid).as_str(),
+    ))
+}
+
+pub async fn check_pipeline_code(
+    form: actix_web::web::Json<PipelineCode>,
+) -> Result<HttpResponse, RutesHttpError> {
+    println!("checking syntax");
+    crate::core::pipelines::parser::check_syntax(form.script.as_str())
+        .map_err(|_e| RutesHttpError::Default)?;
+    println!("checking syntax done");
+    Ok(HttpResponse::Ok().body("ok"))
+}
+
+pub async fn execute(
+    path: web::Path<String>,
+    templates: actix_web::web::Data<tera::Tera>,
+) -> Result<HttpResponse, RutesHttpError> {
+    let uuid = path.into_inner();
+    let user = User::new(String::from("tsukiko")).map_err(|_e| RutesHttpError::Default)?;
+    let pipeline = core::pipelines::query_pipeline(user, uuid.clone())
+        .map_err(|_e| RutesHttpError::Default)?;
+    let parameters = core::pipelines::parser::get_script_parameters(pipeline.script.as_str())
+        .map_err(|_e| RutesHttpError::Default)?;
+    Ok(common::render_template(
+        "pipelines/execute.html",
+        crate::context!({"uuid": pipeline.uuid, "name": pipeline.name, "description": pipeline.description, "parameters": parameters }),
+        templates,
+    ))
 }
