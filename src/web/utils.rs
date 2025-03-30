@@ -1,3 +1,5 @@
+/// This macro serialize a given structure
+/// I use it to serialize data within  HttpResponse
 #[macro_export]
 macro_rules! context {
     ( $( $x:tt )+ ) => {
@@ -5,13 +7,7 @@ macro_rules! context {
     }
 }
 
-#[macro_export]
-macro_rules! json_response {
-    ( $( $x:tt )+ ) => {
-        serde_json::json!( $($x)+ )
-    }
-}
-
+/// This is the default location of Tera templates
 pub fn get_templates_route() -> tera::Tera {
     tera::Tera::new("src/web/templates/**/*.html").unwrap()
 }
