@@ -1,3 +1,4 @@
+/// This file contains the CLI errors for Rutes.
 #[derive(Debug)]
 pub enum RutesError {
     ExecutorError,
@@ -7,4 +8,5 @@ pub enum RutesError {
     TaskError,
     ConfigurationError,
     PipelineError,
+    PipelineSyntaxError,
 }

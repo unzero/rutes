@@ -1,0 +1,33 @@
+pipeline = { 
+    SOI ~ "{" ~ parameters? ~ "}" ~ EOI 
+} 
+
+parameters = { 
+    #parameter = parameter ~ ( "," ~ #parameter = parameter )* 
+}
+
+parameter = { 
+    "parameter" ~ "{" ~ pairs ~ "}" 
+}
+
+pairs = { 
+    #pair = pair ~ ( "," ~ #pair =  pair )* 
+}
+
+pair = { 
+    #identifier = identifier ~ ":" ~ #value = value 
+}
+
+identifier = @{ ( ASCII_ALPHANUMERIC | "_" )+ }
+
+value = { string | number | boolean }
+number = @{ ASCII_DIGIT+ }
+string = ${ "\"" ~ inner ~ "\"" }
+inner = @{ char* }
+char = {
+    !("\"" | "\\") ~ ANY
+    | "\\" ~ ("\"" | "\\" | "/" | "b" | "f" | "n" | "r" | "t")
+    | "\\" ~ ("u" ~ ASCII_HEX_DIGIT{4})
+}
+boolean = { "true" | "false" }
+WHITESPACE = _{ " " | "\t" | "\r" | "\n" }

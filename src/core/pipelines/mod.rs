@@ -3,6 +3,7 @@ use std::path::Path;
 
 use uuid::Uuid;
 
+pub mod parser;
 mod pipeline;
 
 use super::error::RutesError;
