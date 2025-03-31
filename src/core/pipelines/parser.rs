@@ -12,14 +12,11 @@ struct PipelineParser;
 /// The method is used for quick validation of pipeline's syntax
 pub fn check_syntax(script: &str) -> Result<(), RutesError> {
     let _ = PipelineParser::parse(Rule::pipeline, script)
-        .map_err(|_e| {
-            println!("{:?}", _e);
-            return RutesError::PipelineSyntaxError
-        })?;
+        .map_err(|_e| RutesError::PipelineSyntaxError)?;
     Ok(())
 }
 
-pub fn get_script_parameters(script: &str) -> Result<Vec<HashMap<String,String>>, RutesError> {
+pub fn get_script_parameters(script: &str) -> Result<Vec<HashMap<String, String>>, RutesError> {
     let output = PipelineParser::parse(Rule::pipeline, script)
         .map_err(|_e| RutesError::PipelineSyntaxError)?;
 
@@ -37,12 +34,16 @@ pub fn get_script_parameters(script: &str) -> Result<Vec<HashMap<String,String>>
                     .ok_or(RutesError::PipelineSyntaxError)?
                     .as_str(),
             );
-            let value = String::from(
+            let mut value = String::from(
                 inner_pair
                     .find_first_tagged("value")
                     .ok_or(RutesError::PipelineSyntaxError)?
                     .as_str(),
             );
+            if value.starts_with('"') && value.ends_with('"') {
+                let size = value.len();
+                value = String::from(&value[1..size - 1]);
+            }
             param.insert(key, value);
         }
         parameters.push(param);
