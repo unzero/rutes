@@ -60,11 +60,11 @@
 <script>
     function check_syntax() {
         $.ajax({
-            method: "POST",
-            url: "/pipeline/check_syntax",
+            method: 'POST',
+            url: '/pipeline/check_syntax',
             contentType: 'application/json',
             data: JSON.stringify({
-                'script': $("#id-pipeline-script").val(),
+                'script': $('#id-pipeline-script').val(),
             }),
             success: function (result) {
                 const toastLiveExample = document.getElementById('liveToast');
@@ -72,7 +72,7 @@
                 toastBootstrap.show();
             },
             error: function (result) {
-                alert("not good");
+                alert('not good');
             }
         });
     }
