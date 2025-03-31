@@ -24,7 +24,9 @@ impl ResponseError for RutesHttpError {
     fn error_response(&self) -> HttpResponse {
         let templates = actix_web::web::Data::new(crate::web::utils::get_templates_route());
         match self {
-            RutesHttpError::WsError => render_template("errors/404.html", crate::context!({}), templates),
+            RutesHttpError::WsError => {
+                render_template("errors/404.html", crate::context!({}), templates)
+            }
             _ => HttpResponse::InternalServerError().body("Something gone wrong, try again!"),
         }
     }
@@ -32,5 +34,10 @@ impl ResponseError for RutesHttpError {
 
 pub async fn not_found() -> HttpResponse {
     let templates = actix_web::web::Data::new(crate::web::utils::get_templates_route());
-    render_template("errors/404.html", crate::context!({}), templates)
+    let template = templates
+        .render("errors/404.html", crate::context!({}))
+        .expect("Error");
+    HttpResponse::NotFound()
+        .content_type("text/html; charset=utf-8")
+        .body(template)
 }
