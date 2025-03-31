@@ -8,12 +8,12 @@
 <div class="container">
     <h3>Schedule {{name}} pipeline run.</h3>
     <h5>{{description}}.</h5>
-    <form action="/pipeline/schedule" method="post">
+    <form id="schedule-form" method="post">
         {% for parameter in parameters %}
         <div class="mb-3">
             <label for="id-{{parameter.name}}" class="form-label">{{parameter.label}}</label>
             <input type="{{parameter.type}}" class="form-control" id="id-{{parameter.name}}"
-                aria-describedby="{{parameter.name}}">
+                aria-describedby="{{parameter.name}}" name="{{parameter.name}}">
         </div>
         {% endfor %}
         <div class="mb-3">
@@ -22,6 +22,37 @@
     </form>
 </div>
 
-
-
 {% endblock content %}
+
+{% block scripts %}
+<script>
+    // this is the id of the form
+    $('#schedule-form').submit(function (e) {
+
+        e.preventDefault(); 
+        var parameters = {};
+        $(this).serializeArray().forEach( entry => {
+            parameters[entry['name']] = entry['value'];
+        });
+
+        $.ajax({
+            method: 'POST',
+            url: '/pipeline/schedule',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                'uuid': '{{uuid}}',
+                'parameters': parameters
+            }),
+            success: function (result) {
+                alert('ok');
+            },
+            error: function (result) {
+                window.location.replace('/error');
+            }
+        });
+
+    });
+
+</script>
+
+{% endblock scripts %}

@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use serde::{Deserialize, Serialize};
 
 use super::errors::RutesHttpError;
@@ -20,6 +22,12 @@ pub struct NewTask {
 #[derive(Debug, Deserialize, Serialize)]
 pub struct PipelineCode {
     pub script: String,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct NewSchedule {
+    pub uuid: String,
+    pub parameters: HashMap<String, String>,
 }
 
 impl PipelineForm {

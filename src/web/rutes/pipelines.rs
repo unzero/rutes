@@ -4,6 +4,7 @@ use actix_web::{HttpResponse, Result};
 use super::errors::RutesHttpError;
 use super::forms::PipelineCode;
 use super::forms::PipelineForm;
+use super::forms::NewSchedule;
 use crate::core;
 use crate::core::user::User;
 use crate::web::rutes::common;
@@ -121,4 +122,10 @@ pub async fn execute(
         crate::context!({"uuid": pipeline.uuid, "name": pipeline.name, "description": pipeline.description, "parameters": parameters }),
         templates,
     ))
+}
+
+pub async fn schedule(
+    form: actix_web::web::Json<NewSchedule>,
+) -> Result<HttpResponse, RutesHttpError> {
+    Ok(HttpResponse::Ok().body(""))
 }

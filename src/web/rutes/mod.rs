@@ -1,8 +1,8 @@
 mod common;
 pub mod errors;
-mod task;
-mod pipelines;
 mod forms;
+mod pipelines;
+mod task;
 
 //within this file I put all logic for web application
 use actix_web::web;
@@ -49,9 +49,11 @@ pub fn get_configuration(cfg: &mut web::ServiceConfig) {
             .route(web::get().to(pipelines::execute))
             .default_service(actix_web::web::route().to(errors::not_found)),
     );
-
-
-
+    cfg.service(
+        web::resource("pipeline/schedule")
+            .route(web::post().to(pipelines::schedule))
+            .default_service(actix_web::web::route().to(errors::not_found)),
+    );
 
     /* task configuration */
     cfg.service(
