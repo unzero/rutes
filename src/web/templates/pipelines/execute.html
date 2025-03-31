@@ -44,7 +44,7 @@
                 'parameters': parameters
             }),
             success: function (result) {
-                alert('ok');
+                window.location.replace('/pipeline/view/{{uuid}}');
             },
             error: function (result) {
                 window.location.replace('/error');
