@@ -41,3 +41,13 @@ pub async fn not_found() -> HttpResponse {
         .content_type("text/html; charset=utf-8")
         .body(template)
 }
+
+pub async fn internal_error() -> HttpResponse {
+    let templates = actix_web::web::Data::new(crate::web::utils::get_templates_route());
+    let template = templates
+        .render("errors/500.html", crate::context!({}))
+        .expect("Error");
+    HttpResponse::InternalServerError()
+        .content_type("text/html; charset=utf-8")
+        .body(template)
+}

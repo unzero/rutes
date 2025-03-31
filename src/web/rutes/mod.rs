@@ -81,4 +81,8 @@ pub fn get_configuration(cfg: &mut web::ServiceConfig) {
             .route(web::get().to(task::live_logs))
             .default_service(actix_web::web::route().to(errors::not_found)),
     );
+
+    cfg.service(
+        web::resource("error").route(web::get().to(errors::internal_error))
+    );
 }
