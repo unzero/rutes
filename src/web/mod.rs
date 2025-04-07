@@ -29,7 +29,7 @@ pub async fn main(executor_sender: Sender<ExecutorRequest>) -> std::io::Result<(
     let sch_arc = Arc::new(Mutex::new(executor_sender));
 
     let running_task_data = actix_web::web::Data::new(running_task);
-    let sch_arc_data = actix_web::web::Data::new(sch_arc);
+    let executor_sender_data = actix_web::web::Data::new(sch_arc);
 
     HttpServer::new(move || {
         let tera = crate::web::utils::get_templates_route();
@@ -47,7 +47,7 @@ pub async fn main(executor_sender: Sender<ExecutorRequest>) -> std::io::Result<(
             //)
             .app_data(actix_web::web::Data::new(tera))
             .app_data(running_task_data.clone())
-            .app_data(sch_arc_data.clone())
+            .app_data(executor_sender_data.clone())
             .configure(rutes::get_configuration)
             //.service(actix_files::Files::new("/static", "./static/").show_files_listing())
             .default_service(actix_web::web::route().to(not_found))
