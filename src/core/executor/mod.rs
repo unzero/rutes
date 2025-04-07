@@ -5,13 +5,17 @@ use std::sync::Arc;
 use std::sync::Mutex;
 use std::thread;
 
+use messages::ExecutorRequest;
+
+pub mod messages;
+
 pub struct Executor {
-    receiver: Arc<Mutex<Receiver<String>>>,
+    receiver: Arc<Mutex<Receiver<ExecutorRequest>>>,
     state: Arc<AtomicBool>,
 }
 
 impl Executor {
-    pub fn new(receiver: Receiver<String>, state: Arc<AtomicBool>) -> Self {
+    pub fn new(receiver: Receiver<ExecutorRequest>, state: Arc<AtomicBool>) -> Self {
         Self {
             receiver: Arc::new(Mutex::new(receiver)),
             state: state,
@@ -25,7 +29,10 @@ impl Executor {
         let _ = thread::spawn(move || {
             log::info!("Starting scheduler runner");
             while state_arc.load(Ordering::SeqCst) {
-                let recv = receiver_arc.lock().expect("Error getting receiver reference").recv();
+                let recv = receiver_arc
+                    .lock()
+                    .expect("Error getting receiver reference")
+                    .recv();
                 match recv {
                     Ok(msg) => {
                         println!("new message from ui {:?}", msg);
