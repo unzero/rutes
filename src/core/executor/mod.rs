@@ -11,19 +11,19 @@ pub mod messages;
 
 pub struct Executor {
     receiver: Arc<Mutex<Receiver<ExecutorRequest>>>,
-    state: Arc<AtomicBool>,
+    rutes_state: Arc<AtomicBool>,
 }
 
 impl Executor {
-    pub fn new(receiver: Receiver<ExecutorRequest>, state: Arc<AtomicBool>) -> Self {
+    pub fn new(receiver: Receiver<ExecutorRequest>, rutes_state: Arc<AtomicBool>) -> Self {
         Self {
             receiver: Arc::new(Mutex::new(receiver)),
-            state: state,
+            rutes_state: rutes_state,
         }
     }
 
     pub fn run(&mut self) {
-        let state_arc = self.state.clone();
+        let state_arc = self.rutes_state.clone();
         let receiver_arc = self.receiver.clone();
 
         let _ = thread::spawn(move || {
@@ -52,6 +52,6 @@ impl Executor {
 
     pub fn close(&mut self) {
         log::info!("Cleaning scheduler runner");
-        self.state.store(false, Ordering::SeqCst)
+        self.rutes_state.store(false, Ordering::SeqCst)
     }
 }
