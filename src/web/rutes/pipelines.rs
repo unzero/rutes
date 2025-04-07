@@ -2,12 +2,14 @@ use actix_web::web;
 use actix_web::{HttpResponse, Result};
 
 use super::errors::RutesHttpError;
+use super::forms::NewSchedule;
 use super::forms::PipelineCode;
 use super::forms::PipelineForm;
-use super::forms::NewSchedule;
 use crate::core;
+use crate::core::executor::messages::ExecutorRequest;
 use crate::core::user::User;
 use crate::web::rutes::common;
+use crate::web::ExecutorSender;
 
 pub async fn get_pipelines(
     templates: actix_web::web::Data<tera::Tera>,
@@ -125,7 +127,17 @@ pub async fn execute(
 }
 
 pub async fn schedule(
+    executor_sender: actix_web::web::Data<ExecutorSender>,
     form: actix_web::web::Json<NewSchedule>,
 ) -> Result<HttpResponse, RutesHttpError> {
+    let executor_request =
+        ExecutorRequest::new(String::from("ping 8.8.8.8"), String::from("tsukiko"), form.uuid.clone());
+
+    executor_sender
+        .lock()
+        .map_err(|_e| RutesHttpError::Default)?
+        .send(executor_request)
+        .map_err(|_e| RutesHttpError::Default)?;
+
     Ok(HttpResponse::Ok().body(""))
 }
