@@ -29,9 +29,9 @@
     // this is the id of the form
     $('#schedule-form').submit(function (e) {
 
-        e.preventDefault(); 
+        e.preventDefault();
         var parameters = {};
-        $(this).serializeArray().forEach( entry => {
+        $(this).serializeArray().forEach(entry => {
             parameters[entry['name']] = entry['value'];
         });
 
