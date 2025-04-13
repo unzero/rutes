@@ -1,4 +1,5 @@
 use std::fs::File;
+use std::fs;
 use std::process::Child;
 use std::process::Command;
 use std::collections::HashMap;
@@ -99,5 +100,26 @@ pub fn execute(active_user: &User, command: &str, args: Vec<&str>) -> Result<Tas
     cmd.args(args);
     cmd.stdout(file);
     let child = cmd.spawn().map_err(|_e| RutesError::ExecutorError)?;
+    Ok(Task::new(uuid, child, filepath, String::from(command)))
+}
+
+pub fn execute_for_pipeline(user: &User, command: &str, pipeline_uuid: String) -> Result<Task, RutesError> {
+    log::debug!("Pipeline {:?} running {:?} for user {:?} ", pipeline_uuid, command, user);
+
+    let uuid = Uuid::new_v4();
+    let path_prefix = format!("{}/{}/run/{}", user.get_userpath(), pipeline_uuid, uuid);
+    fs::create_dir_all(path_prefix.clone()).map_err(|_e| RutesError::PipelineError)?;
+    let filepath = format!("{}/run.log", path_prefix);
+    let file = File::create(filepath.clone()).map_err(|_e| {
+        log::error!("Error opening file: pipeline {:?} for user {:?}", pipeline_uuid, user);
+        RutesError::ExecutorError
+    })?;
+
+    let mut cmd = Command::new(command);
+    cmd.stdout(file);
+    let child = cmd.spawn().map_err(|_e|{
+        log::error!("Error running a task: {:?}", _e);
+        RutesError::ExecutorError
+    })?;
     Ok(Task::new(uuid, child, filepath, String::from(command)))
 }

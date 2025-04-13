@@ -130,8 +130,9 @@ pub async fn schedule(
     executor_sender: actix_web::web::Data<ExecutorSender>,
     form: actix_web::web::Json<NewSchedule>,
 ) -> Result<HttpResponse, RutesHttpError> {
+    let user = User::new(String::from("tsukiko")).map_err(|_e| RutesHttpError::Default)?;
     let executor_request =
-        ExecutorRequest::new(String::from("ping 8.8.8.8"), String::from("tsukiko"), form.uuid.clone());
+        ExecutorRequest::new(String::from("ls"), user, form.uuid.clone());
 
     executor_sender
         .lock()
